@@ -3,6 +3,7 @@ import { Footer } from "@/components/footer";
 import { LeadCaptureForm } from "@/components/lead-capture-form";
 import { Navbar } from "@/components/navbar";
 import { SectionHeading } from "@/components/section-heading";
+import Image from "next/image";
 
 const edgeItems = [
   {
@@ -109,11 +110,13 @@ export default function Home() {
             </div>
 
             <div className="relative mt-12 min-h-[340px] lg:mt-0">
-              <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl">
-                <img
+              <div className="relative h-[360px] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl sm:h-[430px]">
+                <Image
                   src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80"
                   alt="Business team discussion"
-                  className="h-[360px] w-full object-cover sm:h-[430px]"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
                 />
               </div>
 
