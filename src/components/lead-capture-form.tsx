@@ -5,18 +5,20 @@ import { FormEvent, useState } from "react";
 export function LeadCaptureForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
     setMessage(null);
+    setIsError(false);
 
     const formData = new FormData(event.currentTarget);
     const payload = {
-      fullName: String(formData.get("fullName") || ""),
-      workEmail: String(formData.get("workEmail") || ""),
-      company: String(formData.get("company") || ""),
-      teamSize: String(formData.get("teamSize") || ""),
+      fullName: String(formData.get("fullName") || "").trim(),
+      workEmail: String(formData.get("workEmail") || "").trim(),
+      company: String(formData.get("company") || "").trim(),
+      teamSize: String(formData.get("teamSize") || "").trim(),
     };
 
     try {
@@ -27,13 +29,29 @@ export function LeadCaptureForm() {
       });
 
       if (!response.ok) {
-        throw new Error("Could not submit your request");
+        let apiMessage = "Could not submit your request";
+        try {
+          const errorBody = (await response.json()) as { error?: string };
+          if (errorBody.error) {
+            apiMessage = errorBody.error;
+          }
+        } catch {
+          // no-op: use fallback message
+        }
+
+        throw new Error(`${apiMessage} (status ${response.status})`);
       }
 
       event.currentTarget.reset();
       setMessage("Thanks! Our team will contact you shortly.");
-    } catch {
-      setMessage("Submission failed. Please try again.");
+    } catch (error) {
+      setIsError(true);
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Submission failed. Please try again.",
+      );
+      console.error("Lead form submission failed:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -102,7 +120,11 @@ export function LeadCaptureForm() {
         {isSubmitting ? "Submitting..." : "Request callback"}
       </button>
 
-      {message ? <p className="mt-4 text-sm text-slate-600">{message}</p> : null}
+      {message ? (
+        <p className={`mt-4 text-sm ${isError ? "text-red-600" : "text-slate-600"}`}>
+          {message}
+        </p>
+      ) : null}
     </form>
   );
 }
