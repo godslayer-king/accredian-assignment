@@ -9,11 +9,12 @@ export function LeadCaptureForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setIsSubmitting(true);
     setMessage(null);
     setIsError(false);
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const payload = {
       fullName: String(formData.get("fullName") || "").trim(),
       workEmail: String(formData.get("workEmail") || "").trim(),
@@ -42,7 +43,7 @@ export function LeadCaptureForm() {
         throw new Error(`${apiMessage} (status ${response.status})`);
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setMessage("Thanks! Our team will contact you shortly.");
     } catch (error) {
       setIsError(true);
