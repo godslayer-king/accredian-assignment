@@ -4,7 +4,7 @@ This project recreates the Accredian Enterprise landing experience using Next.js
 
 ## Live Link and Repository
 
-- Vercel Deployment: _Pending deployment (add Vercel URL after first deploy)_
+- Vercel Deployment: https://internship-assignment-fawn.vercel.app
 - GitHub Repository: https://github.com/godslayer-king/accredian-assignment
 
 ## Tech Stack
